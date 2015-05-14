@@ -1,0 +1,3 @@
+- Verify download with gpg key
+- check if sudoers file is needed
+- create package
