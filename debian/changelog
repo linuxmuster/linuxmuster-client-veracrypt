@@ -1,3 +1,9 @@
+linuxmuster-client-veracrypt (0.0.2-1) trusty-testing; urgency=medium
+
+  * Working Package, deletes downloaded files
+
+ -- jeff <bz@adler>  Thu, 14 May 2015 15:52:48 +0200
+
 linuxmuster-client-veracrypt (0.0.1-1) trusty-testing; urgency=low
 
   * First Revision
