@@ -18,12 +18,13 @@ my $help=0;
 my $info=0;
 my $download_dir="/tmp";
 my $uninstaller="/usr/bin/veracrypt-uninstall.sh";
-
+my $keep_files=0;
 
 
 # Parsen der Optionen
 my $testopt=GetOptions(
            "help|h" => \$help,
+           "keep-files" => \$keep_files,
            "info|i" => \$info,
           );
 
@@ -38,6 +39,8 @@ if ($help==1){
 This script installs VeraCrypt
 
 Options
+  --keep-files
+   do not delete downloaded files in /tmp
   -h  / --help  
    show this help
 
@@ -72,12 +75,13 @@ my $version="1.0f-2";
 
 my $dirname="VeraCrypt%20".$version;
 my $filename="veracrypt-".$version."-setup.tar.bz2";
+my $key="VeraCrypt_PGP_public_key.asc";
 
 my $download_file="wget http://sourceforge.net/projects/veracrypt/files/".
                   $dirname."/".$filename;
-my $signature_file="wget wget http://sourceforge.net/projects/veracrypt/files/".
-                  $dirname."/".$filename;
-my $idrix_key_pub="wget https://www.idrix.fr/VeraCrypt/VeraCrypt_PGP_public_key.asc";
+my $signature_file="wget http://sourceforge.net/projects/veracrypt/files/".
+                  $dirname."/".$filename.".sig";
+my $idrix_key_pub="wget https://www.idrix.fr/VeraCrypt/".$key;
 
 
 
@@ -115,10 +119,24 @@ if (-f $uninstaller){
 system("cd $download_dir; tar xjvf $filename");
 
 # installing
-my $install="/tmp/veracrypt-".$version."-setup-gui-".$arch;
+my $install=$download_dir."/veracrypt-".$version."-setup-gui-".$arch;
 system($install);
 
 
+if ($keep_files==0){
+    # removing temporary downloaded files
+    my $remove="rm ".$download_dir."/veracrypt-*setup-*";
+    system($remove);
+
+    $remove="rm ".$download_dir."/".$filename;
+    system($remove);
+
+    $remove="rm ".$download_dir."/".$filename.".sig";
+    system($remove);
+
+    $remove="rm ".$download_dir."/".$key;
+   system($remove);
+}
 
 
 print "########## DONE: downloading and installing VeraCrypt\n";
