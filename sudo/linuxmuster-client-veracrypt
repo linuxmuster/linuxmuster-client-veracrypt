@@ -1,0 +1,2 @@
+# for VeraCrypt
+%plugdev ALL=(ALL) /usr/bin/veracrypt 

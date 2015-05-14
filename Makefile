@@ -1,12 +1,8 @@
 #!/usr/bin/make
-# Zur Erstellung des Debian-Pakets notwendig
 # Created by Rüdiger Beck (jeffbeck-at-web.de)
 DESTDIR=
 
-CONF=$(DESTDIR)/etc/linuxmuster-client/veracrypt
-BIN=$(DESTDIR)/usr/bin
 SBIN=$(DESTDIR)/usr/sbin
-SHARE=$(DESTDIR)/usr/share/linuxmuster-client-veracrypt
 ETC=$(DESTDIR)/etc/sudoers.d
 
 help:
@@ -27,8 +23,8 @@ help:
 
 install:
 	@echo '   * Installing sudoers stuff'
-	#@install -d -m0440 -oroot -groot $(ETC)
-	#@install -oroot -groot --mode=0440 sudo/linuxmuster-client-veracrypt $(ETC)
+	@install -d -m0440 -oroot -groot $(ETC)
+	@install -oroot -groot --mode=0440 sudo/linuxmuster-client-veracrypt $(ETC)
 	@echo '   * Adding Icon'
 	@install -d -m0755 -oroot -groot $(SBIN)
 	@install -oroot -groot --mode=0440 scripts/linuxmuster-client-veracrypt-installer $(SBIN)

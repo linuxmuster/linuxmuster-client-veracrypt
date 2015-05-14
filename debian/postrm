@@ -1,0 +1,24 @@
+#! /bin/sh
+# postrm script for linuxmuster-client-veracrypt
+#
+# see: dh_installdeb(1)
+
+set -e
+
+# source debconf stuff
+#. /usr/share/debconf/confmodule
+# sozrce dbconfig-common stuff
+#. /usr/share/dbconfig-common/dpkg/postrm.pgsql
+# do it
+# parameter 1: package name
+# parameter 2: arguments that were passed to the maintainer script
+
+# use veracrypt uninstaller to remove veracrypt
+if [ -f /usr/bin/veracrypt-uninstall.sh ]; then
+  /usr/bin/veracrypt-uninstall.sh
+else
+  echo "postrm: veracrypt seems to be installed already"
+fi
+
+
+#DEBHELPER#

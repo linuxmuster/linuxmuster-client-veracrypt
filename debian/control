@@ -1,0 +1,18 @@
+Source: linuxmuster-client-veracrypt
+Section: admin
+Priority: optional
+Maintainer: Ruediger Beck <jeffbeck@web.de>
+Build-Depends: debhelper , perl-base, fakeroot
+Standards-Version: 3.5.2
+
+
+
+Package: linuxmuster-client-veracrypt
+Architecture: all
+Suggests: 
+Pre-Depends: 
+Depends: 
+Description: Install VeraCrypt 1.0f-2 and make it available to all users 
+  The VeraCrypt standard package 1.0f-2 for 32bit and 64bit is downloaded from
+  sourceforge.net and installed. The group plugdev kann use
+  VeraCrypt, i.e. in most cases all users.
