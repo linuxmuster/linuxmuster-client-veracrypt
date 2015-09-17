@@ -1,3 +1,9 @@
+linuxmuster-client-veracrypt (0.0.3-1) trusty-testing; urgency=medium
+
+  * New upstream Version 1.14
+
+ -- bz <bz@overpower>  Fri, 18 Sep 2015 01:32:24 +0200
+
 linuxmuster-client-veracrypt (0.0.2-1) trusty-testing; urgency=medium
 
   * Working Package, deletes downloaded files

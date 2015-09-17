@@ -71,7 +71,7 @@ if ($uname eq "x86_64"){
 
 
 # version number must be changed
-my $version="1.0f-2";
+my $version="1.14";
 
 my $dirname="VeraCrypt%20".$version;
 my $filename="veracrypt-".$version."-setup.tar.bz2";
@@ -88,19 +88,30 @@ my $idrix_key_pub="wget https://www.idrix.fr/VeraCrypt/".$key;
 
 
 my $command="cd $download_dir; wget -t 10 -c --timestamping $download_file";
-print "$command\n";
+print "\n$command\n";
 system("$command");
 
 $command="cd $download_dir; wget -t 10 -c --timestamping $signature_file";
-print "$command\n";
+print "\n$command\n";
 system("$command");
 
 $command="cd $download_dir; wget -t 10 -c --timestamping $idrix_key_pub";
-print "$command\n";
+print "\n$command\n";
 system("$command");
 
 
-# continue only if download was successful ????
+# continue only if download was successful
+my $install=$download_dir."/veracrypt-".$version."-setup.tar.bz2";
+
+if (-f $install){
+    print "\nSuccesfully downloaded $install\n\n";
+} else {
+    print "\n";
+    print "ERROR: No download-file $install\n";
+    print "       Exiting before uninstalling old Version\n\n";
+    exit;
+}
+
 
 # uninstall old installation, if existing
 if (-f $uninstaller){
@@ -109,14 +120,16 @@ if (-f $uninstaller){
     print "$command\n";
     system("$command");
 } else {
-    print "$uninstaller not found. I guess VeraCrypt is not installed on this system!";
+    print "\n$uninstaller not found\n";
+    print "I guess VeraCrypt is not installed on this system!\n\n";
 }
 
 
 
-
 # unpacking
+print "Unpacking the following files:\n";
 system("cd $download_dir; tar xjvf $filename");
+
 
 # installing
 my $install=$download_dir."/veracrypt-".$version."-setup-gui-".$arch;
