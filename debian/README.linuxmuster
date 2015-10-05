@@ -1,0 +1,11 @@
+To create a package:
+
+make deb
+
+
+To update to a new version of veracrypt:
+
+Update Version number in the following files:
+   ./debian/changelog
+   ./debian/control  -> 2 times
+   ./scripts/linuxmuster-client-veracrypt-installer
