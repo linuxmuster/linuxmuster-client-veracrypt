@@ -1,4 +1,4 @@
-linuxmuster-client-veracrypt (0.0.5-2) trusty-testing; urgency=medium
+linuxmuster-client-veracrypt (0.0.5-3) trusty-testing; urgency=medium
 
   * Added "install" file to "debian"
   * Added first version of linuxmuster-autoveracrypt

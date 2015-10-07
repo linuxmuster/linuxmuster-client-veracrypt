@@ -1,0 +1,21 @@
+# Konfiguration für linuxmuster-client-veracrypt
+
+# Name der Containerdatei
+CONTAINERNAME="qgm-encrypted.tc"
+
+# Benutzerhome (als Variable, falls man das mal in eine Option auslagern möchte)
+USERHOME=$HOME
+
+# Mountverzeichnis
+MOUNTUSBTO="$USERHOME/USB-verschluesselt"
+
+# Mitteilungstexte
+MSG_PASSWORT="Legen Sie ein Passwort für den verschlüsselten Container fest,\nindem Sie es zweimal eingeben."
+MSG_CREATE="Bitte warten, Container wird erzeugt. Das kann mehrere Minuten dauern!"
+TTL_CREATE="Container wird erzeugt"
+MSG_SIZE='Im Verzeichnis $MOUNTPOINT sind $FREEMB MB Platz frei.\nWie groß (im MB) soll der neue Container sein?'
+MSG_EJECT="Der verschlüsselte Container wurde sicher ausgeworfen.\n\nWollen Sie den USB Stick ebenfalls auswerfen?"
+MSG_NO_USB="Es wurde kein Massenspeichermedium gefunden. Stellen Sie sicher dass der USB-Stick angeschlossen ist."
+
+# Truecrypt/VeraCrypt binary
+CRYPTBIN="veracrypt"
