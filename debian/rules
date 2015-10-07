@@ -51,10 +51,11 @@ install: build
 	dh_testroot
 	dh_clean -k
 	dh_installdirs
+	dh_install
 
 	# Add here commands to install package into 
         # debian/linuxmuster-client-veracrypt
-	$(MAKE) -B install DESTDIR=$(CURDIR)/debian/linuxmuster-client-veracrypt
+	#$(MAKE) -B install DESTDIR=$(CURDIR)/debian/linuxmuster-client-veracrypt
 
 # Build architecture-independent files here.
 binary-indep: build install
