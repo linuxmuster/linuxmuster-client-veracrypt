@@ -1,31 +1,14 @@
 #!/bin/bash
 
-# qgm-tuecrypt
+# linuxmuster-autoveracrypt
 # Ein kleines Skript, um die Verwendung von Truecrypt auf 
 # Linux-Clients zu vereinfachen
 #
 # GPLv3 Frank Schiebel <frank@linuxmuster.net> 2015-06-16 
 #
 
-# Konfiguration 
-# Name der Containerdatei
-CONTAINERNAME="qgm-encrypted.tc"
-# Benutzerhome (als Variable, falls man das mal in eine Option 
-# auslagern möchte)
-USERHOME=$HOME
-# Mountverzeichnis
-MOUNTUSBTO="$USERHOME/USB-verschluesselt"
-
-# Mitteilungstexte
-MSG_PASSWORT="Legen Sie ein Passwort für den verschlüsselten Container fest,\nindem Sie es zweimal eingeben."
-
-MSG_CREATE="Bitte warten, Container wird erzeugt. Das kann mehrere Minuten dauern!"
-TTL_CREATE="Container wird erzeugt"
-MSG_SIZE='Im Verzeichnis $MOUNTPOINT sind $FREEMB MB Platz frei.\nWie groß (im MB) soll der neue Container sein?'
-
-MSG_EJECT="Der verschlüsselte Container wurde sicher ausgeworfen.\n\nWollen Sie den USB Stick ebenfalls auswerfen?"
-MSG_NO_USB="Es wurde kein Massenspeichermedium gefunden. Stellen Sie sicher dass der USB-Stick angeschlossen ist."
-
+# Konfiguration einlesen
+. /etc/linuxmuster-veracrypt/config  || exit 1
 
 # Kommandozeilenargumente
 action="mount"
@@ -57,7 +40,7 @@ function mount_container () {
 	fi
 
     # Prüfe, ob der Container bereits gemountet ist
-	CONTAINER_MOUNTED=$(truecrypt -t -l | grep $CONTAINER)
+	CONTAINER_MOUNTED=$($CRYPTBIN -t -l | grep $CONTAINER)
     # Wenn ja, Hinweis an den Anwender, Fragen, ob der Container ausgeworfen werden soll
 	if [ "x$CONTAINER_MOUNTED" != "x" ]; then 
 		zenity  --question --window-icon="info" --text="Der Container ist bereits eingebunden!\n\nMöchten Sie den Container auswerfen?"
@@ -74,7 +57,7 @@ function mount_container () {
 	mkdir -p $MOUNTUSBTO
 	# Container einbinden. TC fragt dabei 
     # grafisch nach dem Passwort für den Container
-	sudo truecrypt $CONTAINER $MOUNTUSBTO
+	sudo $CRYPTBIN $CONTAINER $MOUNTUSBTO
 }
 
 #
@@ -86,7 +69,7 @@ function mount_container () {
 # ausgehängt werden
 #
 function umount_container () {	
-	sudo truecrypt -d $CONTAINER && zenity  --question --text="$MSG_EJECT"
+	sudo $CRYPTBIN -d $CONTAINER && zenity  --question --text="$MSG_EJECT"
 	if [ $? -eq 0 ]; then 
         DEVICEPATH=$(find /media -name qgm-encrypted.tc 2> /dev/null | head -n 1)
         DEVICEPATH=${DEVICEPATH%/*}
@@ -182,17 +165,17 @@ function create_new_container () {
     done
 
     # Container anlegen
-	truecrypt 	--text \
-			--filesystem=FAT \
-			--volume-type=normal \
-			--create  \
-			--size=$SIZE \
-			--encryption=AES \
-			--hash=RIPEMD-160 \
-			--password="$CONTAINER_PASS" \
-			--keyfiles= \
-			--random-source=/dev/urandom \
-			$MOUNTPOINT/$CONTAINERNAME  |  zenity 	--progress \
+	$CRYPTBIN --text \
+			  --filesystem=FAT \
+			  --volume-type=normal \
+			  --create  \
+			  --size=$SIZE \
+			  --encryption=AES \
+			  --hash=RIPEMD-160 \
+			  --password="$CONTAINER_PASS" \
+			  --keyfiles= \
+			  --random-source=/dev/urandom \
+			  $MOUNTPOINT/$CONTAINERNAME  |  zenity 	--progress \
 								--width 350 \
 								--auto-close \
 								--no-cancel \

@@ -1,15 +1,16 @@
 #!/usr/bin/make -f
-# Sample debian/rules that uses debhelper.
-# GNU copyright 1997 to 1999 by Joey Hess.
+# Sample debian/rules that uses debhelper. 
+# GNU copyright 1997 by Joey Hess.
+#
+# This version is for a hypothetical package that builds an
+# architecture-dependant package, as well as an architecture-independent
+# package.
 
-# Uncomment this to turn on verbose mode.
+# Uncomment this to turn on verbose mode. 
 #export DH_VERBOSE=1
 
 # This is the debhelper compatibility version to use.
-# moved to debian/compat
-# export DH_COMPAT=3
-
-
+export DH_COMPAT=4
 
 ifneq (,$(findstring debug,$(DEB_BUILD_OPTIONS)))
 	CFLAGS += -g
@@ -26,72 +27,85 @@ configure-stamp:
 	touch configure-stamp
 
 
-build: build-stamp
-
-build-stamp: configure-stamp 
+build-arch: configure-stamp  build-arch-stamp
+build-arch-stamp:
 	dh_testdir
 
-	# Add here commands to compile the package.
-#	$(MAKE)
+	# Add here command to compile/build the package.
+	#$(MAKE)
 
-	touch build-stamp
+	touch build-arch-stamp
 
-clean:
+build-indep:  configure-stamp build-indep-stamp
+build-indep-stamp:
+	dh_testdir
+
+	# Add here command to compile/build the arch indep package.
+	# It's ok not to do anything here, if you don't need to build
+	#  anything for this package.
+
+	touch build-indep-stamp
+
+build: build-arch build-indep
+
+clean: clean1
+clean1:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp configure-stamp
+	rm -f build-indep-stamp build-arch-stamp configure-stamp
 
 	# Add here commands to clean up after the build process.
-	-$(MAKE) clean
+	#-$(MAKE) clean
 
 	dh_clean
 
+
+install: DH_OPTIONS=
 install: build
 	dh_testdir
 	dh_testroot
 	dh_clean -k
 	dh_installdirs
-	dh_install
 
-	# Add here commands to install package into 
-        # debian/linuxmuster-client-veracrypt
-	#$(MAKE) -B install DESTDIR=$(CURDIR)/debian/linuxmuster-client-veracrypt
+	# Add here commands to install the package.
+	dh_install
+	# remove unnecessary dirs
+	rm -rf `find debian/linuxmuster-migration -name .svn`
+	rm -f `find debian/linuxmuster-migration -name .directory`
 
 # Build architecture-independent files here.
+# Pass -i to all debhelper commands in this target to reduce clutter.
 binary-indep: build install
 	dh_testdir
 	dh_testroot
-	dh_installdebconf	
-	dh_installchangelogs
-# install debian/copyright file in every package:
+	dh_installdirs
+	dh_installdebconf
 	dh_installdocs
-#	dh_installexamples
-#	dh_installmenu
-	dh_installlogrotate
-#	dh_installemacsen
-#	dh_installpam
-#	dh_installmime
-#	dh_installinit
-	dh_installcron
-# Install manpages for linuxmuster-client-veracrypt
-#	dh_installman -psophomorix2 sophomorix2/man/de/sophomorix.de.8
-#	dh_undocumented
-	dh_install --sourcedir=debian/linuxmuster-client-veracrypt
+#	dh_installexamples -i
+#	dh_installmenu -i
+	dh_installlogrotate -i
+#	dh_installemacsen -i
+#	dh_installpam -i
+#	dh_installmime -i
+#	dh_installinit -i --no-start
+	dh_installcron -i
+#	dh_installman -i
+#	dh_installinfo -i
+#	dh_undocumented -i
+	dh_installchangelogs
 	dh_link
-#	dh_strip
 	dh_compress
 	dh_fixperms
-#	dh_makeshlibs
 	dh_installdeb
-#	dh_perl
-#	dh_shlibdeps
+#	dh_perl -i
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
 
-
 # Build architecture-dependent files here.
-binary-arch: build install
+binary-arch: install
+# We have nothing to do by default.
+
 
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install configure
+.PHONY: build clean binary-indep binary-arch binary install configure clean1
