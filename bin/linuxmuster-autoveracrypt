@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # linuxmuster-autoveracrypt
-# Ein kleines Skript, um die Verwendung von Truecrypt auf 
+# Ein kleines Skript, um die Verwendung von VeraCrypt auf 
 # Linux-Clients zu vereinfachen
 #
 # GPLv3 Frank Schiebel <frank@linuxmuster.net> 2015-06-16 
