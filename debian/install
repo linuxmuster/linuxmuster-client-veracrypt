@@ -1,0 +1,5 @@
+etc/*		etc/linuxmuster/migration/
+sbin/*		usr/sbin/
+bin/*		usr/bin/
+sudo/*      
+

@@ -1,2 +1,2 @@
 # for VeraCrypt
-%plugdev ALL=(ALL) /usr/bin/veracrypt 
+%plugdev ALL=NOPASSWD: /usr/bin/veracrypt 
