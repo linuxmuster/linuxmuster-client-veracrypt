@@ -3,7 +3,10 @@
 DESTDIR=
 
 SBIN=$(DESTDIR)/usr/sbin
-ETC=$(DESTDIR)/etc/sudoers.d
+BIN=$(DESTDIR)/usr/bin
+SUDOERS=$(DESTDIR)/etc/sudoers.d
+ETC=$(DESTDIR)/etc/linuxmuster-client-veracrypt
+
 
 help:
 	@echo ' '
@@ -23,12 +26,16 @@ help:
 
 install:
 	@echo '   * Installing sudoers stuff'
-	@install -d -m0440 -oroot -groot $(ETC)
-	@install -oroot -groot --mode=0440 sudo/linuxmuster-client-veracrypt $(ETC)
-	@echo '   * Adding Icon'
+	@install -d -m0440 -oroot -groot $(SUDOERS)
+	@install -oroot -groot --mode=0440 sudo/linuxmuster-client-veracrypt $(SUDOERS)
+	@echo '   * Adding Scripts'
 	@install -d -m0755 -oroot -groot $(SBIN)
 	@install -oroot -groot --mode=0440 scripts/linuxmuster-client-veracrypt-installer $(SBIN)
-
+	@install -d -m0755 -oroot -groot $(BIN)
+	@install -m755 -oroot -groot scripts/linuxmuster-autoveracrypt $(BIN)
+	@echo '   * Adding Config for host'
+	@install -d -m0755 -oroot -groot $(ETC)
+	@install -oroot -groot --mode=755 config/linuxmuster-client-veracrypt.conf  $(ETC)
 
 # build a package
 deb:
@@ -40,3 +47,7 @@ deb:
 	@echo 'Do not forget to tag this version in git'
 	@echo ''
 
+clean:
+	@echo ''
+	@echo 'Cleaning up'
+	@echo ''

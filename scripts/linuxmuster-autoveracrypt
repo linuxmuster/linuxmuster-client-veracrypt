@@ -1,0 +1,198 @@
+#!/bin/bash
+
+# linuxmuster-autoveracrypt
+# Ein kleines Skript, um die Verwendung von VeraCrypt auf 
+# Linux-Clients zu vereinfachen
+#
+# GPLv3 Frank Schiebel <frank@linuxmuster.net> 2015-06-16 
+#
+
+# Konfiguration einlesen
+. /etc/linuxmuster-client-veracrypt/linuxmuster-client-veracrypt.conf  || exit 1
+
+# Kommandozeilenargumente
+action="mount"
+while getopts 'dc' OPT; do
+  case $OPT in
+    c)  action="create";;
+    d)  action="umount";;
+    *)  unknown="yes";;
+  esac
+done
+
+
+#
+# mount_container Container einbinden
+#
+# Diese Funktion sucht in den entfernbaren 
+# Medien nach einer Datei mit dem Namen 
+# $CONTAINERNAME und bindet diese ein.
+#
+function mount_container () {
+	# Suche den Container unterhalb von /media, nur der erste gefundene wird autoatisch verwaltet!
+	CONTAINER=$(find /media -name $CONTAINERNAME ! -path "*.Trash*" 2> /dev/null | head -n 1)
+    
+    # Kein Container gefunden - jetzt wird einer angelegt!
+	if [ "x$CONTAINER" = "x" ]; then 
+		create_new_container 
+        mount_container
+		exit
+	fi
+
+    # Prüfe, ob der Container bereits gemountet ist
+	CONTAINER_MOUNTED=$($CRYPTBIN -t -l | grep $CONTAINER)
+    # Wenn ja, Hinweis an den Anwender, Fragen, ob der Container ausgeworfen werden soll
+	if [ "x$CONTAINER_MOUNTED" != "x" ]; then 
+		zenity  --question --window-icon="info" --text="Der Container ist bereits eingebunden!\n\nMöchten Sie den Container auswerfen?"
+        # Wenn Antort aus zenity "Ja" ist, Container auswerfen
+		if [ $? -eq 0 ]; then 
+			umount_container
+		fi
+        # Sonst Skript beenden
+		exit 0
+	fi 
+
+
+	# Verzeichnis anlegen
+	mkdir -p $MOUNTUSBTO
+	# Container einbinden. TC fragt dabei 
+    # grafisch nach dem Passwort für den Container
+	sudo $CRYPTBIN $CONTAINER $MOUNTUSBTO
+}
+
+#
+# umount_container Container aushängen
+#
+# Diese Funktion entfernt den TC-Container und 
+# Informiert den Benutzer. 
+# Auf Nachfrage kann das USB Gerät gleich 
+# ausgehängt werden
+#
+function umount_container () {	
+	sudo $CRYPTBIN -d $CONTAINER && zenity  --question --text="$MSG_EJECT"
+	if [ $? -eq 0 ]; then 
+        DEVICEPATH=$(find /media -name qgm-encrypted.tc 2> /dev/null | head -n 1)
+        DEVICEPATH=${DEVICEPATH%/*}
+        # Das wird wahrscheinlich nicht gehen, ohne sudo....
+		umount $DEVICEPATH
+	fi
+
+}
+
+#
+# create_new_container Container erzeugen
+#
+function create_new_container () {
+    # Suche eingehängte Massenpeichergeräte
+    MOUNTPOINT=$(mount | grep "on /media" | awk -F"type" '{print $1}' | awk -F"on" '{print $2}' | sed -e "s/^ //"| sed -e "s/ $//" | head -n 1)
+    # Wenn keine gefunden werden: Informiere den Benutzer und beende das Skript
+    # FIXME zenity Rückmeldung
+	if [ "x$MOUNTPOINT" = "x" ]; then 
+        zenity  --info \
+                --window-icon="info" \
+                --text="$MSG_NO_USB"
+		exit 1
+	fi
+    # Freien Platz auf dem Ziellaufwerk ermitteln
+    FREE=$(df "$MOUNTPOINT" | awk '{print $4}' | tail -n 1)
+    FREEMB=$((FREE / 1024 ))
+    # Minimalwert des Schiebereglers
+    MINMB=128
+    # Maximalwert des Schiebelreglers
+    MAXMB=$((FREEMB - FREEMB / 10 ))
+    # Startwert des Schiebelreglers
+    if [ $MAXMB -gt 1200 ]; then 
+        SELECTMB=1024
+    else
+        SELECTMB=$((FREEMB / 2))
+    fi
+
+    if [ $SELECTMB -lt $MINMB ]; then
+        MINMB=$((SELECTMB / 2))
+    fi
+
+
+    # Fragen, wie gross der Container sein soll
+    echo $MSG_SIZE
+    MSG_SIZE=$(echo $MSG_SIZE | sed -e "s|\$MOUNTPOINT|$MOUNTPOINT|g")
+    echo $MSG_SIZE
+    MSG_SIZE=$(echo $MSG_SIZE | sed -e "s|\$FREEMB|$FREEMB|g")
+    echo $MSG_SIZE
+    SIZE=$(zenity   --scale \
+                    --text="$MSG_SIZE" \
+                    --min-value=$MINMB \
+                    --max-value=$MAXMB \
+                    --title="Containergröße" \
+                    --value=$SELECTMB)
+
+    # Leere Antwort: Abbrechen
+    if [ x$SIZE = "x" ]; then 
+        exit 1
+    fi
+    
+    # TC erwartet die Containerröße in Bytes...
+    SIZE=$((SIZE * 1024 *1024))
+        
+    PWCORRECT=0
+    while [ $PWCORRECT -eq 0 ]; do
+        # Passwort des Containers erfragen
+        PASSSTRING=$(zenity --forms \
+                             --title="Passwort festlegen" \
+                             --text="$MSG_PASSWORT" \
+                             --separator="::::::::::" \
+                             --add-password="Passwort" \
+                             --add-password="Passwort-Wiederholung")
+        PASS1=$(echo $PASSSTRING | awk -F"::::::::::" '{print $1}')
+        PASS2=$(echo $PASSSTRING | awk -F"::::::::::" '{print $2}')
+
+        # Leeres Passwort bricht den gesamten Vorgang ab
+        # genauso wie "Abbrechen"
+        if [ x$PASS1 = "x" ]; then 
+            exit 0
+        fi
+        if [ x$PASS2 = "x" ]; then 
+            exit 0
+        fi
+
+        PWCORRECT=1
+        CONTAINER_PASS=$PASS1
+
+        # PWs stimmen nicht überein...
+        if [ $PASS1 != $PASS2 ]; then   
+            MSG_PASSWORT="Die eingegebenen Passwörter haben nicht übereingestimmt.\nBitte geben Sie das Passwort nochmals ein und wiederholen Sie es korrekt"
+            PWCORRECT=0
+        fi
+    done
+
+    # Container anlegen
+	$CRYPTBIN --text \
+			  --filesystem=FAT \
+			  --volume-type=normal \
+			  --create  \
+			  --size=$SIZE \
+			  --encryption=AES \
+			  --hash=RIPEMD-160 \
+			  --password="$CONTAINER_PASS" \
+			  --keyfiles= \
+			  --random-source=/dev/urandom \
+			  $MOUNTPOINT/$CONTAINERNAME  |  zenity 	--progress \
+								--width 350 \
+								--auto-close \
+								--no-cancel \
+								--pulsate \
+								--text "$MSG_CREATE" \
+								--title "$TTL_CREATE"
+
+}
+
+case $action in 
+ create) 
+	create_new_container
+ ;;
+ mount)
+	mount_container
+ ;;
+ umount)
+	umount_container
+ ;;
+esac

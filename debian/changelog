@@ -1,10 +1,8 @@
-linuxmuster-client-veracrypt (0.0.5-3) trusty-testing; urgency=medium
+linuxmuster-client-veracrypt (0.0.5-1) trusty-unstable; urgency=medium
 
-  * Added "install" file to "debian"
-  * Added first version of linuxmuster-autoveracrypt
-  * Removed the urge to input the users password when using veracrypt
+  * Sudoers without password, first revision of autoveracrypt (Frank Schiebel) 
 
- -- frank <frank@linuxmuster.net>  Wed, 07 Oct 2015 09:08:13 +0200
+ -- Ruediger Beck <bz@j1009p21.bszleo.de>  Thu, 15 Oct 2015 17:04:02 +0200
 
 linuxmuster-client-veracrypt (0.0.4-1) trusty-testing; urgency=medium
 
