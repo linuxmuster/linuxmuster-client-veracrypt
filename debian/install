@@ -1,4 +1,0 @@
-sbin/*		usr/sbin/
-bin/*		usr/bin/
-sudo/*      etc/sudoers.d/
-etc/*       etc/linuxmuster-veracrypt/

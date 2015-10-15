@@ -1,6 +1,0 @@
-build-stamp
-configure-stamp
-debian/files
-debian/linuxmuster-client-veracrypt.debhelper.log
-debian/linuxmuster-client-veracrypt.substvars
-debian/linuxmuster-client-veracrypt/
