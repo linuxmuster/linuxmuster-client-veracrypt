@@ -1,3 +1,9 @@
+linuxmuster-client-veracrypt (0.0.6-1) trusty-unstable; urgency=medium
+
+  * New upstream Version 1.16
+
+ -- Ruediger Beck <bz@j1009p21.bszleo.de>  Thu, 15 Oct 2015 17:20:42 +0200
+
 linuxmuster-client-veracrypt (0.0.5-1) trusty-unstable; urgency=medium
 
   * Sudoers without password, first revision of autoveracrypt (Frank Schiebel) 
