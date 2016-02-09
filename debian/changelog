@@ -1,3 +1,9 @@
+linuxmuster-client-veracrypt (0.0.6-xenial1) xenial-testing; urgency=low
+
+  * First release for Ubuntu 16.04 xenial-xerus
+
+ -- Dominik Foerderer <dominik.foerderer@windeck-gymnasium.de>  Thu, 09 Feb 2016 11:20:42 +0200
+ 
 linuxmuster-client-veracrypt (0.0.6-2) trusty; urgency=medium
 
   * New upstream Version 1.16
