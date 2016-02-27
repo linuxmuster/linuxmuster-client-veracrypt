@@ -1,3 +1,9 @@
+linuxmuster-client-veracrypt (0.0.7-1) xenial-testing; urgency=medium
+
+  * New upstream release 1.17
+
+ -- Rüdiger Beck <bz@overpower>  Sat, 27 Feb 2016 10:56:03 +0100
+
 linuxmuster-client-veracrypt (0.0.6-2) xenial-testing; urgency=low
 
   * First release for Ubuntu 16.04 xenial-xerus

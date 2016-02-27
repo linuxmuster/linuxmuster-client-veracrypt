@@ -71,7 +71,7 @@ if ($uname eq "x86_64"){
 
 
 # version number must be changed
-my $version="1.16";
+my $version="1.17";
 
 my $dirname="VeraCrypt%20".$version;
 my $filename="veracrypt-".$version."-setup.tar.bz2";
