@@ -1,3 +1,9 @@
+linuxmuster-client-veracrypt (0.0.7-2) xenial; urgency=low
+
+  * Stable release for xenial xerus
+
+ -- Dominik Foerderer <dominik.foerderer@windeck-gymnasium.de>  Thu, 09 Feb 2016 11:20:42 +0200
+ 
 linuxmuster-client-veracrypt (0.0.7-1) xenial-testing; urgency=medium
 
   * New upstream release 1.17
