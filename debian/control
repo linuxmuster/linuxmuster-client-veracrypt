@@ -11,8 +11,8 @@ Package: linuxmuster-client-veracrypt
 Architecture: all
 Suggests: 
 Pre-Depends: 
-Depends: 
-Description: Install VeraCrypt 1.17 and make it available to all users 
-  The VeraCrypt standard package 1.17 for 32bit and 64bit is downloaded from
+Depends: dmsetup 
+Description: Install VeraCrypt 1.18 and make it available to all users 
+  The VeraCrypt standard package 1.18 for 32bit and 64bit is downloaded from
   sourceforge.net and installed. The group plugdev kann use
   VeraCrypt, i.e. in most cases all users.

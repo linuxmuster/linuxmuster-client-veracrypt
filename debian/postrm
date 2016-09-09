@@ -15,9 +15,10 @@ set -e
 
 # use veracrypt uninstaller to remove veracrypt
 if [ -f /usr/bin/veracrypt-uninstall.sh ]; then
+  echo "postrm: trying to uninstall veracrypt"
   /usr/bin/veracrypt-uninstall.sh
 else
-  echo "postrm: veracrypt seems to be installed already"
+  echo "postrm: veracrypt seems to be uninstalled already"
 fi
 
 

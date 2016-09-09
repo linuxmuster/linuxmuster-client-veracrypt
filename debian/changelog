@@ -1,3 +1,9 @@
+linuxmuster-client-veracrypt (0.1.2-1) xenial; urgency=medium
+
+  * New upstream release 1.18
+
+ -- Ruediger Beck <bz@j1009p16.bszleo.de>  Fri, 09 Sep 2016 14:16:25 +0200
+
 linuxmuster-client-veracrypt (0.0.7-2) xenial; urgency=low
 
   * Stable release for xenial xerus

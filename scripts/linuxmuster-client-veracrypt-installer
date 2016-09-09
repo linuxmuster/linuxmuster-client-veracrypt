@@ -71,17 +71,17 @@ if ($uname eq "x86_64"){
 
 
 # version number must be changed
-my $version="1.17";
+my $version="1.18";
 
 my $dirname="VeraCrypt%20".$version;
 my $filename="veracrypt-".$version."-setup.tar.bz2";
 my $key="VeraCrypt_PGP_public_key.asc";
 
-my $download_file="wget http://sourceforge.net/projects/veracrypt/files/".
+my $download_file="https://sourceforge.net/projects/veracrypt/files/".
                   $dirname."/".$filename;
-my $signature_file="wget http://sourceforge.net/projects/veracrypt/files/".
+my $signature_file="https://sourceforge.net/projects/veracrypt/files/".
                   $dirname."/".$filename.".sig";
-my $idrix_key_pub="wget https://www.idrix.fr/VeraCrypt/".$key;
+my $idrix_key_pub="https://www.idrix.fr/VeraCrypt/".$key;
 
 
 
@@ -114,14 +114,14 @@ if (-f $install){
 
 
 # uninstall old installation, if existing
-if (-f $uninstaller){
+if (-x $uninstaller){
     print "Detected installed version of VeraCrypt.\n";
-    my $command="$uninstaller ...\n";
+    my $command="$uninstaller";
     print "$command\n";
     system("$command");
 } else {
     print "\n$uninstaller not found\n";
-    print "I guess VeraCrypt is not installed on this system!\n\n";
+    print "I guess VeraCrypt is already uninstalled on this system!\n\n";
 }
 
 
@@ -132,22 +132,22 @@ system("cd $download_dir; tar xjvf $filename");
 
 
 # installing
-my $install=$download_dir."/veracrypt-".$version."-setup-gui-".$arch;
-system($install);
+my $install2=$download_dir."/veracrypt-".$version."-setup-gui-".$arch;
+system($install2);
 
 
 if ($keep_files==0){
     # removing temporary downloaded files
-    my $remove="rm ".$download_dir."/veracrypt-*setup-*";
+    my $remove="rm -f ".$download_dir."/veracrypt-*setup-*";
     system($remove);
 
-    $remove="rm ".$download_dir."/".$filename;
+    $remove="rm -f ".$download_dir."/".$filename;
     system($remove);
 
-    $remove="rm ".$download_dir."/".$filename.".sig";
+    $remove="rm -f ".$download_dir."/".$filename.".sig";
     system($remove);
 
-    $remove="rm ".$download_dir."/".$key;
+    $remove="rm -f ".$download_dir."/".$key;
    system($remove);
 }
 
