@@ -12,7 +12,7 @@ Architecture: all
 Suggests: 
 Pre-Depends: 
 Depends: dmsetup 
-Description: Install VeraCrypt 1.19 and make it available to all users 
-  The VeraCrypt standard package 1.19 for 32bit and 64bit is downloaded from
+Description: Install VeraCrypt 1.21 and make it available to all users 
+  The VeraCrypt standard package 1.21 for 32bit and 64bit is downloaded from
   sourceforge.net and installed. The group plugdev kann use
   VeraCrypt, i.e. in most cases all users.
